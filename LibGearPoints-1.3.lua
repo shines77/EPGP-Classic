@@ -886,6 +886,9 @@ local switchEquipLoc = {
   -- ["INVTYPE_BAG"]             = "bag",
   ["INVTYPE_WAND"]            = "wand", -- Fate
 }
+function lib:SwitchEquipLoc()
+  return switchEquipLoc
+end
 
 function lib:GetScale(equipLoc, subClass)
   local name = switchEquipLoc[equipLoc] or switchRanged[subClass]

@@ -121,24 +121,48 @@ local function HelpPlate(desc, order)
   return help
 end
 
-local function ScalePlate(index)
+local function ScalePlate(name, index)
   scalePlate = {
     name = L["Multiplier %d"]:format(index),
     type = "range",
     min = 0,
     max = 5,
+    set =
+      function(info, val)
+        local s = name .. "Scale" .. tostring(index)
+        local c = name .. "Comment" .. tostring(index)
+        local cv = mod.db.profile[c]
+        if val == 0 and (cv == nil or cv == "") then
+          mod.db.profile[s] = nil
+          mod.db.profile[c] = nil
+        else
+          mod.db.profile[s] = val
+        end
+      end,
     step = 0.01,
     order = index * 2,
   }
   return scalePlate
 end
 
-local function CommentPlate(index)
+local function CommentPlate(name, index)
   local s = L["Comment %d"]:format(index)
   commentPlate = {
     name = s,
     desc = s,
     type = "input",
+    set =
+      function(info, val)
+        local s = name .. "Scale" .. tostring(index)
+        local c = name .. "Comment" .. tostring(index)
+        local sv = mod.db.profile[s]
+        if val == "" and (sv == nil or sv == 0) then
+          mod.db.profile[s] = nil
+          mod.db.profile[c] = nil
+        else
+          mod.db.profile[c] = val
+        end
+      end,
     order = index * 2 + 1,
   }
   return commentPlate
@@ -226,12 +250,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_HEAD,
     args = {
       help = HelpPlate(_G.INVTYPE_HEAD),
-      headScale1 = ScalePlate(1),
-      headComment1 = CommentPlate(1),
-      headScale2 = ScalePlate(2),
-      headComment2 = CommentPlate(2),
-      headScale3 = ScalePlate(3),
-      headComment3 = CommentPlate(3),
+      headScale1 = ScalePlate("head", 1),
+      headComment1 = CommentPlate("head", 1),
+      headScale2 = ScalePlate("head", 2),
+      headComment2 = CommentPlate("head", 2),
+      headScale3 = ScalePlate("head", 3),
+      headComment3 = CommentPlate("head", 3),
     },
   },
   neck = {
@@ -240,12 +264,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_NECK,
     args = {
       help = HelpPlate(_G.INVTYPE_NECK),
-      neckScale1 = ScalePlate(1),
-      neckComment1 = CommentPlate(1),
-      neckScale2 = ScalePlate(2),
-      neckComment2 = CommentPlate(2),
-      neckScale3 = ScalePlate(3),
-      neckComment3 = CommentPlate(3),
+      neckScale1 = ScalePlate("neck", 1),
+      neckComment1 = CommentPlate("neck", 1),
+      neckScale2 = ScalePlate("neck", 2),
+      neckComment2 = CommentPlate("neck", 2),
+      neckScale3 = ScalePlate("neck", 3),
+      neckComment3 = CommentPlate("neck", 3),
     },
   },
   shoulder = {
@@ -254,12 +278,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_SHOULDER,
     args = {
       help = HelpPlate(_G.INVTYPE_SHOULDER),
-      shoulderScale1 = ScalePlate(1),
-      shoulderComment1 = CommentPlate(1),
-      shoulderScale2 = ScalePlate(2),
-      shoulderComment2 = CommentPlate(2),
-      shoulderScale3 = ScalePlate(3),
-      shoulderComment3 = CommentPlate(3),
+      shoulderScale1 = ScalePlate("shoulder", 1),
+      shoulderComment1 = CommentPlate("shoulder", 1),
+      shoulderScale2 = ScalePlate("shoulder", 2),
+      shoulderComment2 = CommentPlate("shoulder", 2),
+      shoulderScale3 = ScalePlate("shoulder", 3),
+      shoulderComment3 = CommentPlate("shoulder", 3),
     },
   },
   -- body = {
@@ -268,12 +292,12 @@ mod.optionsArgs = {
   --   name = _G.INVTYPE_BODY, -- Shirt
   --   args = {
   --     help = HelpPlate(_G.INVTYPE_BODY),
-  --     bodyScale1 = ScalePlate(1),
-  --     bodyComment1 = CommentPlate(1),
-  --     bodyScale2 = ScalePlate(2),
-  --     bodyComment2 = CommentPlate(2),
-  --     bodyScale3 = ScalePlate(3),
-  --     bodyComment3 = CommentPlate(3),
+  --     bodyScale1 = ScalePlate("body", 1),
+  --     bodyComment1 = CommentPlate("body", 1),
+  --     bodyScale2 = ScalePlate("body", 2),
+  --     bodyComment2 = CommentPlate("body", 2),
+  --     bodyScale3 = ScalePlate("body", 3),
+  --     bodyComment3 = CommentPlate("body", 3),
   --   },
   -- },
   chest = {
@@ -282,12 +306,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_CHEST, -- also _G.INVTYPE_ROBE
     args = {
       help = HelpPlate(_G.INVTYPE_CHEST),
-      chestScale1 = ScalePlate(1),
-      chestComment1 = CommentPlate(1),
-      chestScale2 = ScalePlate(2),
-      chestComment2 = CommentPlate(2),
-      chestScale3 = ScalePlate(3),
-      chestComment3 = CommentPlate(3),
+      chestScale1 = ScalePlate("chest", 1),
+      chestComment1 = CommentPlate("chest", 1),
+      chestScale2 = ScalePlate("chest", 2),
+      chestComment2 = CommentPlate("chest", 2),
+      chestScale3 = ScalePlate("chest", 3),
+      chestComment3 = CommentPlate("chest", 3),
     },
   },
   waist = {
@@ -296,12 +320,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_WAIST,
     args = {
       help = HelpPlate(_G.INVTYPE_WAIST),
-      waistScale1 = ScalePlate(1),
-      waistComment1 = CommentPlate(1),
-      waistScale2 = ScalePlate(2),
-      waistComment2 = CommentPlate(2),
-      waistScale3 = ScalePlate(3),
-      waistComment3 = CommentPlate(3),
+      waistScale1 = ScalePlate("waist", 1),
+      waistComment1 = CommentPlate("waist", 1),
+      waistScale2 = ScalePlate("waist", 2),
+      waistComment2 = CommentPlate("waist", 2),
+      waistScale3 = ScalePlate("waist", 3),
+      waistComment3 = CommentPlate("waist", 3),
     },
   },
   legs = {
@@ -310,12 +334,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_LEGS,
     args = {
       help = HelpPlate(_G.INVTYPE_LEGS),
-      legsScale1 = ScalePlate(1),
-      legsComment1 = CommentPlate(1),
-      legsScale2 = ScalePlate(2),
-      legsComment2 = CommentPlate(2),
-      legsScale3 = ScalePlate(3),
-      legsComment3 = CommentPlate(3),
+      legsScale1 = ScalePlate("legs", 1),
+      legsComment1 = CommentPlate("legs", 1),
+      legsScale2 = ScalePlate("legs", 2),
+      legsComment2 = CommentPlate("legs", 2),
+      legsScale3 = ScalePlate("legs", 3),
+      legsComment3 = CommentPlate("legs", 3),
     },
   },
   feet = {
@@ -324,12 +348,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_FEET,
     args = {
       help = HelpPlate(_G.INVTYPE_FEET),
-      feetScale1 = ScalePlate(1),
-      feetComment1 = CommentPlate(1),
-      feetScale2 = ScalePlate(2),
-      feetComment2 = CommentPlate(2),
-      feetScale3 = ScalePlate(3),
-      feetComment3 = CommentPlate(3),
+      feetScale1 = ScalePlate("feet", 1),
+      feetComment1 = CommentPlate("feet", 1),
+      feetScale2 = ScalePlate("feet", 2),
+      feetComment2 = CommentPlate("feet", 2),
+      feetScale3 = ScalePlate("feet", 3),
+      feetComment3 = CommentPlate("feet", 3),
     },
   },
   wrist = {
@@ -338,12 +362,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_WRIST,
     args = {
       help = HelpPlate(_G.INVTYPE_WRIST),
-      wristScale1 = ScalePlate(1),
-      wristComment1 = CommentPlate(1),
-      wristScale2 = ScalePlate(2),
-      wristComment2 = CommentPlate(2),
-      wristScale3 = ScalePlate(3),
-      wristComment3 = CommentPlate(3),
+      wristScale1 = ScalePlate("wrist", 1),
+      wristComment1 = CommentPlate("wrist", 1),
+      wristScale2 = ScalePlate("wrist", 2),
+      wristComment2 = CommentPlate("wrist", 2),
+      wristScale3 = ScalePlate("wrist", 3),
+      wristComment3 = CommentPlate("wrist", 3),
     },
   },
   hand = {
@@ -352,12 +376,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_HAND,
     args = {
       help = HelpPlate(_G.INVTYPE_HAND),
-      handScale1 = ScalePlate(1),
-      handComment1 = CommentPlate(1),
-      handScale2 = ScalePlate(2),
-      handComment2 = CommentPlate(2),
-      handScale3 = ScalePlate(3),
-      handComment3 = CommentPlate(3),
+      handScale1 = ScalePlate("hand", 1),
+      handComment1 = CommentPlate("hand", 1),
+      handScale2 = ScalePlate("hand", 2),
+      handComment2 = CommentPlate("hand", 2),
+      handScale3 = ScalePlate("hand", 3),
+      handComment3 = CommentPlate("hand", 3),
     },
   },
   finger = {
@@ -366,12 +390,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_FINGER,
     args = {
       help = HelpPlate(_G.INVTYPE_FINGER),
-      fingerScale1 = ScalePlate(1),
-      fingerComment1 = CommentPlate(1),
-      fingerScale2 = ScalePlate(2),
-      fingerComment2 = CommentPlate(2),
-      fingerScale3 = ScalePlate(3),
-      fingerComment3 = CommentPlate(3),
+      fingerScale1 = ScalePlate("finger", 1),
+      fingerComment1 = CommentPlate("finger", 1),
+      fingerScale2 = ScalePlate("finger", 2),
+      fingerComment2 = CommentPlate("finger", 2),
+      fingerScale3 = ScalePlate("finger", 3),
+      fingerComment3 = CommentPlate("finger", 3),
     },
   },
   trinket = {
@@ -380,12 +404,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_TRINKET,
     args = {
       help = HelpPlate(_G.INVTYPE_TRINKET),
-      trinketScale1 = ScalePlate(1),
-      trinketComment1 = CommentPlate(1),
-      trinketScale2 = ScalePlate(2),
-      trinketComment2 = CommentPlate(2),
-      trinketScale3 = ScalePlate(3),
-      trinketComment3 = CommentPlate(3),
+      trinketScale1 = ScalePlate("trinket", 1),
+      trinketComment1 = CommentPlate("trinket", 1),
+      trinketScale2 = ScalePlate("trinket", 2),
+      trinketComment2 = CommentPlate("trinket", 2),
+      trinketScale3 = ScalePlate("trinket", 3),
+      trinketComment3 = CommentPlate("trinket", 3),
     },
   },
   cloak = {
@@ -394,12 +418,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_CLOAK,
     args = {
       help = HelpPlate(_G.INVTYPE_CLOAK),
-      cloakScale1 = ScalePlate(1),
-      cloakComment1 = CommentPlate(1),
-      cloakScale2 = ScalePlate(2),
-      cloakComment2 = CommentPlate(2),
-      cloakScale3 = ScalePlate(3),
-      cloakComment3 = CommentPlate(3),
+      cloakScale1 = ScalePlate("cloak", 1),
+      cloakComment1 = CommentPlate("cloak", 1),
+      cloakScale2 = ScalePlate("cloak", 2),
+      cloakComment2 = CommentPlate("cloak", 2),
+      cloakScale3 = ScalePlate("cloak", 3),
+      cloakComment3 = CommentPlate("cloak", 3),
     },
   },
   shield = {
@@ -408,12 +432,12 @@ mod.optionsArgs = {
     name = _G.SHIELDSLOT,
     args = {
       help = HelpPlate(_G.SHIELDSLOT),
-      shieldScale1 = ScalePlate(1),
-      shieldComment1 = CommentPlate(1),
-      shieldScale2 = ScalePlate(2),
-      shieldComment2 = CommentPlate(2),
-      shieldScale3 = ScalePlate(3),
-      shieldComment3 = CommentPlate(3),
+      shieldScale1 = ScalePlate("shield", 1),
+      shieldComment1 = CommentPlate("shield", 1),
+      shieldScale2 = ScalePlate("shield", 2),
+      shieldComment2 = CommentPlate("shield", 2),
+      shieldScale3 = ScalePlate("shield", 3),
+      shieldComment3 = CommentPlate("shield", 3),
     },
   },
   weapon = {
@@ -422,12 +446,12 @@ mod.optionsArgs = {
     name = DISPLAY_NAME.OneHWeapon, -- one-handed weapon
     args = {
       help = HelpPlate(DISPLAY_NAME.OneHWeapon),
-      weaponScale1 = ScalePlate(1),
-      weaponComment1 = CommentPlate(1),
-      weaponScale2 = ScalePlate(2),
-      weaponComment2 = CommentPlate(2),
-      weaponScale3 = ScalePlate(3),
-      weaponComment3 = CommentPlate(3),
+      weaponScale1 = ScalePlate("weapon", 1),
+      weaponComment1 = CommentPlate("weapon", 1),
+      weaponScale2 = ScalePlate("weapon", 2),
+      weaponComment2 = CommentPlate("weapon", 2),
+      weaponScale3 = ScalePlate("weapon", 3),
+      weaponComment3 = CommentPlate("weapon", 3),
     },
   },
   weapon2H = {
@@ -436,12 +460,12 @@ mod.optionsArgs = {
     name = DISPLAY_NAME.TwoHWeapon,
     args = {
       help = HelpPlate(DISPLAY_NAME.TwoHWeapon),
-      weapon2HScale1 = ScalePlate(1),
-      weapon2HComment1 = CommentPlate(1),
-      weapon2HScale2 = ScalePlate(2),
-      weapon2HComment2 = CommentPlate(2),
-      weapon2HScale3 = ScalePlate(3),
-      weapon2HComment3 = CommentPlate(3),
+      weapon2HScale1 = ScalePlate("H", 1),
+      weapon2HComment1 = CommentPlate("H", 1),
+      weapon2HScale2 = ScalePlate("H", 2),
+      weapon2HComment2 = CommentPlate("H", 2),
+      weapon2HScale3 = ScalePlate("H", 3),
+      weapon2HComment3 = CommentPlate("H", 3),
     },
   },
   weaponMainH = {
@@ -450,12 +474,12 @@ mod.optionsArgs = {
     name = DISPLAY_NAME.MainHWeapon,
     args = {
       help = HelpPlate(DISPLAY_NAME.MainHWeapon),
-      weaponMainHScale1 = ScalePlate(1),
-      weaponMainHComment1 = CommentPlate(1),
-      weaponMainHScale2 = ScalePlate(2),
-      weaponMainHComment2 = CommentPlate(2),
-      weaponMainHScale3 = ScalePlate(3),
-      weaponMainHComment3 = CommentPlate(3),
+      weaponMainHScale1 = ScalePlate("weaponMainH", 1),
+      weaponMainHComment1 = CommentPlate("weaponMainH", 1),
+      weaponMainHScale2 = ScalePlate("weaponMainH", 2),
+      weaponMainHComment2 = CommentPlate("weaponMainH", 2),
+      weaponMainHScale3 = ScalePlate("weaponMainH", 3),
+      weaponMainHComment3 = CommentPlate("weaponMainH", 3),
     },
   },
   weaponOffH = {
@@ -464,12 +488,12 @@ mod.optionsArgs = {
     name = DISPLAY_NAME.OffHWeapon,
     args = {
       help = HelpPlate(DISPLAY_NAME.OffHWeapon),
-      weaponOffHScale1 = ScalePlate(1),
-      weaponOffHComment1 = CommentPlate(1),
-      weaponOffHScale2 = ScalePlate(2),
-      weaponOffHComment2 = CommentPlate(2),
-      weaponOffHScale3 = ScalePlate(3),
-      weaponOffHComment3 = CommentPlate(3),
+      weaponOffHScale1 = ScalePlate("weaponOffH", 1),
+      weaponOffHComment1 = CommentPlate("weaponOffH", 1),
+      weaponOffHScale2 = ScalePlate("weaponOffH", 2),
+      weaponOffHComment2 = CommentPlate("weaponOffH", 2),
+      weaponOffHScale3 = ScalePlate("weaponOffH", 3),
+      weaponOffHComment3 = CommentPlate("weaponOffH", 3),
     },
   },
   holdable = {
@@ -478,12 +502,12 @@ mod.optionsArgs = {
     name = _G.INVTYPE_HOLDABLE, -- Held in Off-Hand
     args = {
       help = HelpPlate(_G.INVTYPE_HOLDABLE),
-      holdableScale1 = ScalePlate(1),
-      holdableComment1 = CommentPlate(1),
-      holdableScale2 = ScalePlate(2),
-      holdableComment2 = CommentPlate(2),
-      holdableScale3 = ScalePlate(3),
-      holdableComment3 = CommentPlate(3),
+      holdableScale1 = ScalePlate("holdable", 1),
+      holdableComment1 = CommentPlate("holdable", 1),
+      holdableScale2 = ScalePlate("holdable", 2),
+      holdableComment2 = CommentPlate("holdable", 2),
+      holdableScale3 = ScalePlate("holdable", 3),
+      holdableComment3 = CommentPlate("holdable", 3),
     },
   },
   ranged = {
@@ -495,12 +519,12 @@ mod.optionsArgs = {
           LOCAL_NAME.Bow,
           LOCAL_NAME.Gun,
           LOCAL_NAME.Crossbow)),
-      rangedScale1 = ScalePlate(1),
-      rangedComment1 = CommentPlate(1),
-      rangedScale2 = ScalePlate(2),
-      rangedComment2 = CommentPlate(2),
-      rangedScale3 = ScalePlate(3),
-      rangedComment3 = CommentPlate(3),
+      rangedScale1 = ScalePlate("ranged", 1),
+      rangedComment1 = CommentPlate("ranged", 1),
+      rangedScale2 = ScalePlate("ranged", 2),
+      rangedComment2 = CommentPlate("ranged", 2),
+      rangedScale3 = ScalePlate("ranged", 3),
+      rangedComment3 = CommentPlate("ranged", 3),
     },
   },
   wand = {
@@ -509,12 +533,12 @@ mod.optionsArgs = {
     name = LOCAL_NAME.Wand,
     args = {
       help = HelpPlate(LOCAL_NAME.Wand),
-      wandScale1 = ScalePlate(1),
-      wandComment1 = CommentPlate(1),
-      wandScale2 = ScalePlate(2),
-      wandComment2 = CommentPlate(2),
-      wandScale3 = ScalePlate(3),
-      wandComment3 = CommentPlate(3),
+      wandScale1 = ScalePlate("wand", 1),
+      wandComment1 = CommentPlate("wand", 1),
+      wandScale2 = ScalePlate("wand", 2),
+      wandComment2 = CommentPlate("wand", 2),
+      wandScale3 = ScalePlate("wand", 3),
+      wandComment3 = CommentPlate("wand", 3),
     },
   },
   thrown = {
@@ -523,12 +547,12 @@ mod.optionsArgs = {
     name = LOCAL_NAME.Thrown,
     args = {
       help = HelpPlate(LOCAL_NAME.Thrown),
-      thrownScale1 = ScalePlate(1),
-      thrownComment1 = CommentPlate(1),
-      thrownScale2 = ScalePlate(2),
-      thrownComment2 = CommentPlate(2),
-      thrownScale3 = ScalePlate(3),
-      thrownComment3 = CommentPlate(3),
+      thrownScale1 = ScalePlate("thrown", 1),
+      thrownComment1 = CommentPlate("thrown", 1),
+      thrownScale2 = ScalePlate("thrown", 2),
+      thrownComment2 = CommentPlate("thrown", 2),
+      thrownScale3 = ScalePlate("thrown", 3),
+      thrownComment3 = CommentPlate("thrown", 3),
     },
   },
   relic = {
@@ -540,12 +564,12 @@ mod.optionsArgs = {
           LOCAL_NAME.Idol,   -- 神像
           LOCAL_NAME.Libram, -- 圣契
           LOCAL_NAME.Totem)),-- 图腾
-      relicScale1 = ScalePlate(1),
-      relicComment1 = CommentPlate(1),
-      relicScale2 = ScalePlate(2),
-      relicComment2 = CommentPlate(2),
-      relicScale3 = ScalePlate(3),
-      relicComment3 = CommentPlate(3),
+      relicScale1 = ScalePlate("relic", 1),
+      relicComment1 = CommentPlate("relic", 1),
+      relicScale2 = ScalePlate("relic", 2),
+      relicComment2 = CommentPlate("relic", 2),
+      relicScale3 = ScalePlate("relic", 3),
+      relicComment3 = CommentPlate("relic", 3),
     },
   },
   -- bag = {
@@ -554,12 +578,12 @@ mod.optionsArgs = {
   --   name = _G.INVTYPE_BAG,
   --   args = {
   --     help = HelpPlate(_G.INVTYPE_BAG),
-  --     bagScale1 = ScalePlate(1),
-  --     bagComment1 = CommentPlate(1),
-  --     bagScale2 = ScalePlate(2),
-  --     bagComment2 = CommentPlate(2),
-  --     bagScale3 = ScalePlate(3),
-  --     bagComment3 = CommentPlate(3),
+  --     bagScale1 = ScalePlate("bag", 1),
+  --     bagComment1 = CommentPlate("bag", 1),
+  --     bagScale2 = ScalePlate("bag", 2),
+  --     bagComment2 = CommentPlate("bag", 2),
+  --     bagScale3 = ScalePlate("bag", 3),
+  --     bagComment3 = CommentPlate("bag", 3),
   --   },
   -- },
   -- Not available in WOW Classic v1.13
@@ -568,12 +592,12 @@ mod.optionsArgs = {
   --   name = _G.INVTYPE_CUSTOM_MULTISLOT_TIER,
   --   args = {
   --     help = HelpPlate(_G.INVTYPE_CUSTOM_MULTISLOT_TIER),
-  --     customMultislotTierScale1 = ScalePlate(1),
-  --     customMultislotTierComment1 = CommentPlate(1),
-  --     customMultislotTierScale2 = ScalePlate(2),
-  --     customMultislotTierComment2 = CommentPlate(2),
-  --     customMultislotTierScale3 = ScalePlate(3),
-  --     customMultislotTierComment3 = CommentPlate(3),
+  --     customMultislotTierScale1 = ScalePlate("customMultislotTier", 1),
+  --     customMultislotTierComment1 = CommentPlate("customMultislotTier", 1),
+  --     customMultislotTierScale2 = ScalePlate("customMultislotTier", 2),
+  --     customMultislotTierComment2 = CommentPlate("customMultislotTier", 2),
+  --     customMultislotTierScale3 = ScalePlate("customMultislotTier", 3),
+  --     customMultislotTierComment3 = CommentPlate("customMultislotTier", 3),
   --   },
   -- },
 }
@@ -679,4 +703,18 @@ end
 
 function mod:OnInitialize()
   self.db = EPGP.db:RegisterNamespace("points", mod.dbDefaults)
+
+  local switchEquipLoc = GP:SwitchEquipLoc()
+  for i, v in pairs(switchEquipLoc) do
+    for j = 1, 3 do
+      local si = v .. "Scale" .. tostring(j)
+      local ci = v .. "Comment" .. tostring(j)
+      local s = mod.db.profile[si]
+      local c = mod.db.profile[ci]
+      if (s == nil or s == 0) and (c == nil or c == "") then
+        mod.db.profile[si] = nil
+        mod.db.profile[ci] = nil
+      end
+    end
+  end
 end
