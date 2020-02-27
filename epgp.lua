@@ -476,6 +476,20 @@ function EPGP:ExportRoster()
   return t
 end
 
+function EPGP:ExportRosterDetail()
+  local base_gp = self.db.profile.base_gp
+  local t = {}
+  for name,_ in pairs(ep_data) do
+    local ep, gp, main = self:GetEPGP(name)
+    gp = gp - base_gp
+    if ep ~= 0 or gp ~= 0 then
+      local class = EPGP:GetClass(name)
+      table.insert(t, {name, ep, gp, class})
+    end
+  end
+  return t
+end
+
 function EPGP:ImportRoster(t, new_base_gp)
   -- This ugly hack is because EncodeNote reads base_gp to encode the
   -- GP properly. So we reset it to what we get passed, and then we
